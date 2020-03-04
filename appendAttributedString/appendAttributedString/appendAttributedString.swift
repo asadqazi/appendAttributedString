@@ -73,19 +73,25 @@ public extension NSMutableAttributedString {
 	///   - height: Height for the image. Default is nil - image size is left untouched.
 	/// - Returns: This instance of NSMutableAttributedString for call chaining.
 	@discardableResult
-	func append(image: UIImage, height: CGFloat? = nil) -> Self {
-		let attachment = NSTextAttachment()
-		attachment.image = image
-		if let height = height {
-			let ratio = image.size.width / image.size.height
-			attachment.bounds = CGRect(x: attachment.bounds.origin.x,
-									   y: attachment.bounds.origin.y,
-									   width: ratio * height,
-									   height: height)
-		}
-		append(NSAttributedString(attachment: attachment))
-		return self
-	}
+	func append(image: UIImage, height: CGFloat? = nil, font: UIFont? = nil) -> Self {
+        let attachment = NSTextAttachment()
+        
+        if let font = font{
+            attachment.bounds = CGRect(x: 0, y: (font.capHeight - image.size.height).rounded() / 2,
+            width: image.size.width, height: image.size.height)
+        }
+        
+        attachment.image = image
+        if let height = height {
+            let ratio = image.size.width / image.size.height
+            attachment.bounds = CGRect(x: attachment.bounds.origin.x,
+                                       y: attachment.bounds.origin.y,
+                                       width: ratio * height,
+                                       height: height)
+        }
+        append(NSAttributedString(attachment: attachment))
+        return self
+    }
 
 	/// Adds another attributed string and returns itself.
 	/// - Parameters:
